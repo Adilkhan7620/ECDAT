@@ -1,0 +1,26 @@
+rules:
+  - id: ecdat.crypto.rsa
+    message: RSA cryptographic API or identifier observed.
+    severity: INFO
+    languages: [python, javascript, typescript, java, go, c, cpp, csharp, ruby, php]
+    pattern-regex: '\b(RSA|rsa|RSAPrivateKey|RSAPublicKey)\b'
+  - id: ecdat.crypto.ecdsa
+    message: ECDSA cryptographic API or identifier observed.
+    severity: INFO
+    languages: [python, javascript, typescript, java, go, c, cpp, csharp, ruby, php]
+    pattern-regex: '\b(ECDSA|ecdsa|ec\.ECDSA)\b'
+  - id: ecdat.crypto.ecdh
+    message: ECDH cryptographic API or identifier observed.
+    severity: INFO
+    languages: [python, javascript, typescript, java, go, c, cpp, csharp, ruby, php]
+    pattern-regex: '\b(ECDH|ecdh|X25519|X448)\b'
+  - id: ecdat.crypto.aes
+    message: AES cryptographic API or identifier observed.
+    severity: INFO
+    languages: [python, javascript, typescript, java, go, c, cpp, csharp, ruby, php]
+    pattern-regex: '\b(AES|aes|AESGCM|AES_CBC)\b'
+  - id: ecdat.crypto.hashing
+    message: Cryptographic hashing API or identifier observed.
+    severity: INFO
+    languages: [python, javascript, typescript, java, go, c, cpp, csharp, ruby, php]
+    pattern-regex: '\b(hashlib|MessageDigest|SHA-?(1|224|256|384|512)|sha(1|224|256|384|512)|BLAKE2|blake2|MD5|md5)\b'

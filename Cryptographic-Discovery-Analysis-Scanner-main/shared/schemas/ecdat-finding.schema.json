@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecdat.local/schemas/ecdat-finding.schema.json",
+  "title": "ECDAT Finding",
+  "description": "A raw or normalized cryptographic discovery. It is evidence for a future Correlation Engine, not a final CBOM asset and contains no quantum-risk fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["finding_id", "tool", "category", "source", "evidence", "metadata"],
+  "properties": {
+    "finding_id": {"type": "string", "minLength": 1},
+    "tool": {"type": "string", "enum": ["semgrep", "gitleaks", "syft", "trivy", "openssl"]},
+    "category": {"type": "string", "enum": ["crypto_api", "secret", "component", "vulnerability", "certificate", "public_key"]},
+    "algorithm": {"type": ["string", "null"], "minLength": 1},
+    "key_size": {"type": ["integer", "null"], "minimum": 1},
+    "usage": {"type": ["string", "null"], "enum": ["encryption", "key_exchange", "digital_signature", "hashing", "message_authentication", "key_derivation", "unknown", null]},
+    "file": {"type": ["string", "null"], "minLength": 1, "description": "Relative to the scan target; it must not traverse outside it."},
+    "line": {"type": ["integer", "null"], "minimum": 1},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message", "original"],
+      "properties": {
+        "message": {"type": "string", "minLength": 1},
+        "original": {"type": "object", "description": "Original tool-specific evidence, preserved as JSON."},
+        "raw_artifact": {"type": ["string", "null"], "minLength": 1},
+        "raw_pointer": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Optional source-tool confidence only; not a correlation confidence score."},
+    "severity": {"type": ["string", "null"], "minLength": 1, "description": "Severity as supplied by the source tool."},
+    "rule": {"type": ["string", "null"], "minLength": 1, "description": "Native scanner rule identifier when the source tool provides one."},
+    "source": {"type": "string", "enum": ["source_code", "configuration", "dependency", "container", "certificate_file", "public_key_file", "secret_store"]},
+    "metadata": {"type": "object", "description": "Additional scanner-specific JSON metadata."}
+  }
+}

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECDAT — Master Hackathon Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#0A0D12;
+    --bg-panel:#10151C;
+    --bg-panel-2:#141B24;
+    --line:#232B36;
+    --line-strong:#324053;
+    --ink:#E7EDF3;
+    --ink-soft:#93A3B5;
+    --ink-faint:#5C6B7D;
+    --cyan:#5FE3D0;
+    --violet:#8B93FF;
+    --amber:#F2B84B;
+    --red:#F2664B;
+    --radius:6px;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6;}
+  a{color:var(--cyan);text-decoration:none;}
+  .shell{display:grid;grid-template-columns:270px 1fr;min-height:100vh;}
+  nav.toc{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--line);padding:28px 20px;background:var(--bg-panel);}
+  .toc-brand{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:2px;}
+  .toc-brand strong{display:block;font-family:var(--font-display);font-size:1.05rem;color:var(--ink);letter-spacing:0;text-transform:none;margin-top:4px;font-weight:600;}
+  .toc-list{list-style:none;margin:26px 0 0;padding:0;}
+  .toc-list li a{display:flex;gap:10px;align-items:baseline;padding:7px 8px;border-radius:4px;color:var(--ink-soft);font-size:0.87rem;}
+  .toc-list li a:hover{background:var(--bg-panel-2);color:var(--ink);}
+  .toc-list li a em{font-style:normal;font-family:var(--font-mono);font-size:0.68rem;color:var(--ink-faint);width:18px;flex-shrink:0;}
+  .toc-foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:0.72rem;color:var(--ink-faint);line-height:1.5;}
+  main{padding:56px 60px 120px;max-width:1000px;}
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;}
+    nav.toc{display:none;}
+    main{padding:32px 20px 80px;}
+  }
+  header.hero{padding-bottom:44px;border-bottom:1px solid var(--line);margin-bottom:8px;}
+  .eyebrow{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--cyan);margin-bottom:14px;}
+  h1.title{font-family:var(--font-display);font-weight:700;font-size:clamp(1.9rem,3.6vw,2.7rem);line-height:1.08;margin:0 0 14px;letter-spacing:-0.01em;}
+  .dek{max-width:66ch;color:var(--ink-soft);font-size:1.02rem;margin:0 0 22px;}
+  .stack-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-family:var(--font-mono);font-size:0.71rem;padding:4px 10px;border:1px solid var(--line-strong);border-radius:20px;color:var(--ink-soft);}
+  .chip.cyan{border-color:var(--cyan);color:var(--cyan);}
+  .chip.violet{border-color:var(--violet);color:var(--violet);}
+  .chip.amber{border-color:var(--amber);color:var(--amber);}
+  section.block{padding:48px 0;border-bottom:1px solid var(--line);scroll-margin-top:20px;}
+  section.block:last-of-type{border-bottom:none;}
+  .block-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;}
+  .block-num{font-family:var(--font-mono);color:var(--ink-faint);font-size:0.85rem;}
+  h2{font-family:var(--font-display);font-weight:700;font-size:1.55rem;margin:0;letter-spacing:-0.005em;}
+  h3{font-family:var(--font-display);font-weight:600;font-size:1.06rem;margin:30px 0 10px;color:var(--ink);}
+  .block-intro{color:var(--ink-soft);max-width:74ch;margin:14px 0 22px;}
+  p{margin:0 0 12px;}
+  .panel{background:var(--bg-panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin:16px 0;}
+  .panel-label{font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px;}
+  .tree{font-family:var(--font-mono);font-size:0.78rem;line-height:1.65;white-space:pre;overflow-x:auto;color:var(--ink-soft);}
+  .tree .d{color:var(--cyan);}
+  .tree .f{color:var(--ink-faint);}
+  .tree .hi{color:var(--amber);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media (max-width:820px){.two-col,.three-col{grid-template-columns:1fr;}}
+  .mermaid{background:var(--bg-panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:16px 0;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.85rem;}
+  caption{caption-side:top;text-align:left;font-family:var(--font-mono);font-size:0.66rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:8px;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{font-family:var(--font-mono);font-size:0.66rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-faint);font-weight:600;border-bottom:1px solid var(--line-strong);}
+  td code,p code,li code{font-family:var(--font-mono);font-size:0.82em;background:var(--bg-panel-2);padding:1px 5px;border-radius:2px;color:var(--ink);}
+  tr:last-child td{border-bottom:none;}
+  ul.clean{margin:0 0 12px;padding-left:1.2em;}
+  ul.clean li{margin-bottom:6px;}
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;background:var(--bg-panel);}
+  .card h4{margin:0 0 8px;font-family:var(--font-display);font-size:0.95rem;color:var(--ink);}
+  .card .tag{font-family:var(--font-mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--cyan);margin-bottom:6px;display:block;}
+  .badge{display:inline-block;font-family:var(--font-mono);font-size:0.66rem;padding:2px 7px;border-radius:2px;font-weight:600;}
+  .badge.good{background:rgba(95,227,208,0.15);color:var(--cyan);}
+  .badge.warn{background:rgba(242,184,75,0.15);color:var(--amber);}
+  .badge.crit{background:rgba(242,102,75,0.15);color:var(--red);}
+  .note{border-left:3px solid var(--cyan);background:rgba(95,227,208,0.06);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:0.88rem;color:var(--ink);margin:16px 0;}
+  .note.warn{border-left-color:var(--amber);background:rgba(242,184,75,0.06);}
+  code.block{display:block;background:var(--bg-panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;font-family:var(--font-mono);font-size:0.79rem;line-height:1.6;overflow-x:auto;white-space:pre;color:var(--ink-soft);margin:14px 0;}
+  .pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+  .pill{font-family:var(--font-mono);font-size:0.68rem;padding:3px 9px;border-radius:20px;background:var(--bg-panel-2);color:var(--ink-soft);border:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="toc">
+    <div class="toc-brand">SIH 2026 · PS 26164<strong>ECDAT Master Guide</strong></div>
+    <ul class="toc-list">
+      <li><a href="#problem"><em>01</em>Problem &amp; Rubric</a></li>
+      <li><a href="#solution"><em>02</em>Our Solution</a></li>
+      <li><a href="#differentiators"><em>03</em>Winning Differentiators</a></li>
+      <li><a href="#architecture"><em>04</em>System Architecture</a></li>
+      <li><a href="#pipeline"><em>05</em>Scan &amp; Correlation Pipeline</a></li>
+      <li><a href="#cbom"><em>06</em>CBOM Schema</a></li>
+      <li><a href="#data"><em>07</em>Data Model</a></li>
+      <li><a href="#folder"><em>08</em>Folder Structure</a></li>
+      <li><a href="#api"><em>09</em>API Surface</a></li>
+      <li><a href="#team"><em>10</em>Team &amp; Work Split</a></li>
+      <li><a href="#timeline"><em>11</em>6-Day Build Timeline</a></li>
+      <li><a href="#tiers"><em>12</em>Tier 1 vs Tier 2</a></li>
+      <li><a href="#standards"><em>13</em>Standards Cheat-Sheet</a></li>
+      <li><a href="#demo"><em>14</em>Demo Script</a></li>
+      <li><a href="#risk"><em>15</em>Risk &amp; Fallback</a></li>
+    </ul>
+    <div class="toc-foot">Living document — update as scope shifts during the build. Keep this tab open during judging for quick answers.</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">National Technical Research Organisation (NTRO) · Blockchain &amp; Cybersecurity</div>
+      <h1 class="title">ECDAT — Enterprise Cryptographic Discovery &amp; Analysis Tool</h1>
+      <p class="dek">A CBOM analytics platform that discovers cryptographic assets across code, containers and binaries, scores their quantum risk with Mosca's algorithm, and recommends PQC migrations — built to win on correlation, trust, and sovereign compliance, not just detection.</p>
+      <div class="stack-row">
+        <span class="chip cyan">Semgrep</span><span class="chip cyan">Gitleaks</span><span class="chip cyan">Syft</span><span class="chip cyan">Trivy</span><span class="chip cyan">OpenSSL</span>
+        <span class="chip violet">Spring Boot</span><span class="chip violet">Postgres</span><span class="chip violet">React + React Flow</span><span class="chip violet">Recharts</span>
+        <span class="chip amber">CycloneDX 1.7</span><span class="chip amber">liboqs</span><span class="chip amber">YARA</span>
+      </div>
+    </header>
+
+    <!-- 01 PROBLEM -->
+    <section class="block" id="problem">
+      <div class="block-head"><span class="block-num">01</span><h2>Problem &amp; Judging Rubric</h2></div>
+      <p class="block-intro">NTRO wants a tool that inventories every cryptographic artefact across code, binaries, libraries and containers; assesses quantum risk via Mosca's algorithm; classifies assets by criticality; and recommends PQC/hybrid alternatives — delivered as a CBOM report plus an interactive GUI.</p>
+
+      <table>
+        <caption>Judging weights — design every feature against this</caption>
+        <thead><tr><th>Criterion</th><th>Marks</th><th>What it rewards</th></tr></thead>
+        <tbody>
+          <tr><td>Innovativeness</td><td>10</td><td>Originality vs. existing CBOM tools (IBM CBOMkit, SandboxAQ AQtive Guard)</td></tr>
+          <tr><td>Creativity</td><td>10</td><td>Out-of-the-box framing, not just "ran Semgrep, made a CBOM"</td></tr>
+          <tr><td>Implementation</td><td>10</td><td>Feasibility, prototype depth, technical polish</td></tr>
+          <tr><td>Social Impact</td><td>5</td><td>Real-world alignment — India's own PQC timeline is your strongest card</td></tr>
+          <tr><td>Presentation</td><td>5</td><td>Clarity, structure, confident demo narrative</td></tr>
+          <tr><td>Time Discipline</td><td>Penalty</td><td>Don't overrun — rehearse to the clock</td></tr>
+        </tbody>
+      </table>
+      <div class="note">Innovativeness + Creativity + Implementation = 30 of the graded marks. A standard scanner-wrapper architecture caps your ceiling here — Section 03 exists to fix exactly that.</div>
+    </section>
+
+    <!-- 02 SOLUTION -->
+    <section class="block" id="solution">
+      <div class="block-head"><span class="block-num">02</span><h2>Our Solution, In One Line</h2></div>
+      <p class="block-intro"><strong>CBOM generation is commoditized. ECDAT is the correlation, trust, and prioritization layer on top of it, tuned to India's sovereign compliance timeline.</strong> Say this sentence in the pitch — it pre-empts the "you just wrapped open-source scanners" objection.</p>
+
+      <div class="two-col">
+        <div class="card">
+          <span class="tag">Tier 1 — MVP, days 1–4</span>
+          <h4>Discovery + Risk Engine</h4>
+          <ul class="clean">
+            <li>5 scanners (Semgrep, Gitleaks, Syft, Trivy, OpenSSL) feeding a Correlation Engine</li>
+            <li>Mosca risk engine with configurable threat-horizon</li>
+            <li>Blast Radius calculation</li>
+            <li>PQC recommendation engine + comparison matrix</li>
+            <li>Dashboard: inventory, asset detail, risk view, dependency graph</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag">Tier 2 — stretch, days 5–6</span>
+          <h4>Reachability, Compliance, Drift</h4>
+          <ul class="clean">
+            <li>Reachability = internet-facing × sensitive-data (combination, not tracing)</li>
+            <li>Policy Compliance engine against a YAML rules file</li>
+            <li>Drift Detection — pre-computed, demoed as a static before/after screen</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 DIFFERENTIATORS -->
+    <section class="block" id="differentiators">
+      <div class="block-head"><span class="block-num">03</span><h2>The Three Differentiators That Move the Score</h2></div>
+      <p class="block-intro">Ranked by novelty-per-hour of build effort. Build these before anything else in Tier 2.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <span class="tag badge good">~1 day</span>
+          <h4>A · Ensemble Reconciliation</h4>
+          <p>2026 research (BF-CBOM, ARES) shows CBOM tools disagree and miss assets independently. Show your Correlation Engine visibly reconciling conflicting scanner outputs with a per-asset <code>detected-by-N-scanners</code> confidence score.</p>
+        </div>
+        <div class="card">
+          <span class="tag badge good">~0.5 day</span>
+          <h4>B · Signed, Tamper-Evident CBOM</h4>
+          <p>CycloneDX natively supports JSF/JWS signing. Add a "Sign CBOM" button + live tamper-detection demo (edit one byte → verification fails). Government-grade trust story, no other team will show this.</p>
+        </div>
+        <div class="card">
+          <span class="tag badge good">~0.5 day</span>
+          <h4>C · India-Sovereign Compliance Pack</h4>
+          <p>Preload the policy engine with DST/NQM 2027–2029 CII deadlines, RBI Q-SAFE's CBOM mandate, and CNSA 2.0 — every asset gets a verdict tied to a named Indian deadline, not just a generic standard.</p>
+        </div>
+      </div>
+
+      <h3>Secondary showmanship (reuse existing components)</h3>
+      <div class="two-col">
+        <div class="card">
+          <span class="tag">D · Live Mosca timeline</span>
+          <p>Drag a Q-Day slider (2029 ↔ 2035) and watch assets flip risk color in real time — makes the risk engine the demo centerpiece instead of a static table.</p>
+        </div>
+        <div class="card">
+          <span class="tag">E · Reachability as a graph</span>
+          <p>Fuse internet-facing + sensitive-data flags into your React Flow dependency graph so one vulnerable root lights up everything downstream it protects.</p>
+        </div>
+      </div>
+      <div class="note warn">Explicitly descoped: full unknown/custom-crypto detection. It's an open research problem (data-flow graphs, symbolic execution). If time allows, add only a low-confidence "candidate custom-crypto" heuristic flag (entropy + XOR/loop density) — label it clearly, never claim it as detection.</div>
+    </section>
+
+    <!-- 04 ARCHITECTURE -->
+    <section class="block" id="architecture">
+      <div class="block-head"><span class="block-num">04</span><h2>System Architecture</h2></div>
+      <p class="block-intro">Frontend never talks to scanners directly — everything routes through the backend orchestrator so scan execution stays sandboxed and auditable.</p>
+      <div class="mermaid">
+flowchart TB
+    subgraph CLIENT["Frontend — React"]
+        UI1["Scan Config"]
+        UI2["Inventory + Asset Detail"]
+        UI3["Risk Dashboard + Mosca Timeline"]
+        UI4["Dependency Graph (React Flow)"]
+    end
+
+    UI1 -->|POST /scans| API["API Gateway<br/>Spring Boot Controllers"]
+    UI2 -->|GET /assets| API
+    UI3 -->|GET /risks/critical| API
+    UI4 -->|GET /cbom| API
+
+    API --> ORCH["Scan Orchestrator"]
+    ORCH --> SEMGREP["Semgrep<br/>source code"]
+    ORCH --> GITLEAKS["Gitleaks<br/>secrets"]
+    ORCH --> SYFT["Syft<br/>SBOM"]
+    ORCH --> TRIVY["Trivy<br/>containers / CVEs"]
+    ORCH --> OPENSSL["OpenSSL wrapper<br/>certs / keys"]
+
+    SEMGREP --> CORR["Correlation Engine<br/>dedupe + reconcile"]
+    GITLEAKS --> CORR
+    SYFT --> CORR
+    TRIVY --> CORR
+    OPENSSL --> CORR
+
+    CORR --> DB[("Postgres<br/>crypto_assets")]
+    DB --> RISK["Mosca Risk Engine +<br/>Blast Radius + PQC Recs"]
+    RISK --> POLICY["Policy + Reachability<br/>Compliance Engine"]
+    POLICY --> API
+    RISK --> API
+      </div>
+    </section>
+
+    <!-- 05 PIPELINE -->
+    <section class="block" id="pipeline">
+      <div class="block-head"><span class="block-num">05</span><h2>Scan &amp; Correlation Pipeline</h2></div>
+      <p class="block-intro">The sequence that actually differentiates ECDAT — five independent scanners, one reconciled truth.</p>
+      <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant API as API Gateway
+    participant O as Orchestrator
+    participant S as Scanners (x5)
+    participant C as Correlation Engine
+    participant DB as Postgres
+    participant R as Risk Engine
+
+    U->>API: POST /scans (repo url)
+    API->>O: dispatch scan job
+    O->>S: run in parallel (sandboxed)
+    S-->>O: raw findings (per-tool format)
+    O->>C: normalize + merge
+    C->>C: dedupe, resolve conflicts,<br/>assign confidence score
+    C->>DB: persist unified CBOM record
+    DB->>R: trigger risk scoring
+    R->>R: Mosca algorithm + Blast Radius
+    R->>DB: write quantum_risk, pqc_recommendation
+    API-->>U: GET /assets → reconciled CBOM
+      </div>
+      <div class="note">Every asset record should carry a <code>sources: ["semgrep","cbomkit-rules","binary-yara"]</code> array — this is the visual proof of ensemble reconciliation (Differentiator A) on the asset detail screen.</div>
+    </section>
+
+    <!-- 06 CBOM SCHEMA -->
+    <section class="block" id="cbom">
+      <div class="block-head"><span class="block-num">06</span><h2>CBOM / Asset Schema</h2></div>
+      <p class="block-intro">Locked on Day 1 so every team member can build against mock data independently. Aligns to CycloneDX 1.6+ crypto-asset fields.</p>
+      <code class="block">{
+  "asset_id": "CRYPTO-001",
+  "algorithm": "ECDSA",
+  "key_size": 256,
+  "usage": "digital_signature",
+  "application": "payment-api",
+  "source": "source_code",
+  "file": "auth.js",
+  "line": 84,
+  "confidence": 0.94,
+  "detected_by": ["semgrep", "cbomkit-rules"],
+  "internet_facing": true,
+  "protects_sensitive_data": true,
+  "reachability": "CRITICAL",
+  "quantum_risk": "PENDING_RISK_ENGINE",
+  "policy_status": "REVIEW_REQUIRED",
+  "india_compliance": {
+    "framework": "DST-NQM-2027",
+    "deadline": "2027-12-31",
+    "status": "AT_RISK"
+  }
+}</code>
+    </section>
+
+    <!-- 07 DATA MODEL -->
+    <section class="block" id="data">
+      <div class="block-head"><span class="block-num">07</span><h2>Core Data Model</h2></div>
+      <div class="mermaid">
+erDiagram
+    APPLICATION ||--o{ CRYPTO_ASSET : contains
+    CRYPTO_ASSET ||--o{ RECOMMENDATION : "gets"
+    CRYPTO_ASSET }o--|| LIBRARY : "detected via"
+    SCAN ||--o{ CRYPTO_ASSET : produces
+    SCAN {
+        uuid id PK
+        uuid target_id FK
+        timestamp scan_date
+        string status
+    }
+    APPLICATION {
+        uuid id PK
+        string name
+        boolean internet_facing
+    }
+    CRYPTO_ASSET {
+        uuid id PK
+        string algorithm
+        int key_size
+        string quantum_risk
+        string policy_status
+        jsonb detected_by
+    }
+    RECOMMENDATION {
+        uuid id PK
+        string pqc_algorithm
+        string migration_effort
+    }
+    LIBRARY {
+        uuid id PK
+        string name
+        string version
+    }
+      </div>
+    </section>
+
+    <!-- 08 FOLDER -->
+    <section class="block" id="folder">
+      <div class="block-head"><span class="block-num">08</span><h2>Folder Structure</h2></div>
+      <p class="block-intro">Monorepo, three independently buildable codebases sharing only the JSON schema — no one blocks on anyone else until Day 4 integration.</p>
+      <div class="panel">
+        <div class="panel-label">Monorepo root</div>
+        <div class="tree"><span class="d">ecdat/</span>
+├── <span class="d">apps/</span>
+│   ├── <span class="d">web/</span>                    <span class="f"># React frontend — Aditya</span>
+│   │   ├── <span class="d">src/screens/</span>         <span class="f"># ScanConfig, Inventory, AssetDetail, RiskDashboard, DependencyGraph, PQCRecs</span>
+│   │   ├── <span class="d">src/components/</span>
+│   │   └── <span class="d">src/lib/</span>
+│   ├── <span class="d">api/</span>                    <span class="f"># Spring Boot backend — Jaynam</span>
+│   │   ├── <span class="d">controllers/</span>
+│   │   ├── <span class="d">orchestrator/</span>
+│   │   ├── <span class="d">correlation/</span>         <span class="hi"># shared with Vitrag</span>
+│   │   └── <span class="d">db/migrations/</span>
+│   └── <span class="d">scanners/</span>                <span class="f"># scanner wrappers — Vitrag</span>
+│       ├── <span class="d">semgrep-runner/</span>
+│       ├── <span class="d">gitleaks-runner/</span>
+│       ├── <span class="d">syft-runner/</span>
+│       ├── <span class="d">trivy-runner/</span>
+│       └── <span class="d">openssl-wrapper/</span>
+├── <span class="d">packages/</span>
+│   ├── <span class="d">classification/</span>           <span class="f"># heuristic scorer — Adil</span>
+│   ├── <span class="d">risk-engine/</span>               <span class="f"># Mosca + PQC recs — Vikrant</span>
+│   └── <span class="d">policy-engine/</span>             <span class="f"># India CII pack + reachability — Vikrant</span>
+├── <span class="d">schema/</span>
+│   └── <span class="f">cbom-asset-schema.json</span>    <span class="hi"># locked Day 1</span>
+└── <span class="f">ecdat-policy.yml</span>               <span class="f"># India + CNSA 2.0 policy pack</span></div>
+      </div>
+    </section>
+
+    <!-- 09 API -->
+    <section class="block" id="api">
+      <div class="block-head"><span class="block-num">09</span><h2>API Surface</h2></div>
+      <table>
+        <caption>Core endpoints — frontend never calls scanner tools directly</caption>
+        <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>POST</td><td><code>/scans</code></td><td>Kick off a scan against a repo / container / binary target</td></tr>
+          <tr><td>GET</td><td><code>/scans/:id/status</code></td><td>Poll scan progress</td></tr>
+          <tr><td>GET</td><td><code>/assets</code></td><td>Full reconciled CBOM inventory, filterable</td></tr>
+          <tr><td>GET</td><td><code>/assets/:id</code></td><td>Single asset — WHAT/WHERE/WHY/SO WHAT/WHAT NEXT view</td></tr>
+          <tr><td>GET</td><td><code>/risks/critical</code></td><td>Assets flagged CRITICAL by Mosca + Reachability</td></tr>
+          <tr><td>GET</td><td><code>/cbom</code></td><td>Export full signed CycloneDX CBOM document</td></tr>
+          <tr><td>POST</td><td><code>/cbom/verify</code></td><td>Verify a CBOM's JWS signature (tamper-check demo)</td></tr>
+          <tr><td>POST</td><td><code>/policy</code></td><td>Upload / select a policy pack (India CII, CNSA 2.0)</td></tr>
+          <tr><td>GET</td><td><code>/drift</code></td><td>Pre-computed drift comparison between two scan IDs</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10 TEAM -->
+    <section class="block" id="team">
+      <div class="block-head"><span class="block-num">10</span><h2>Team &amp; Work Split</h2></div>
+      <table>
+        <caption>Ownership summary</caption>
+        <thead><tr><th>Person</th><th>Primary (Tier 1)</th><th>Stretch (Tier 2)</th></tr></thead>
+        <tbody>
+          <tr><td>Aditya</td><td>7 frontend screens</td><td>Reachability badge, compliance filter, static drift screen</td></tr>
+          <tr><td>Jaynam</td><td>Backend, DB schema, core APIs</td><td>Policy upload endpoint, drift diff query, CBOM signing endpoint</td></tr>
+          <tr><td>Vitrag</td><td>5 scanners + Correlation Engine (lead)</td><td>Binary/YARA scan, IaC parsing, config parsing</td></tr>
+          <tr><td>Adil</td><td>Heuristic confidence scorer</td><td>Candidate custom-crypto heuristic flag (stretch only)</td></tr>
+          <tr><td>Vikrant</td><td>Risk engine, Blast Radius, PQC recs</td><td>Reachability logic, India policy engine, liboqs benchmark</td></tr>
+        </tbody>
+      </table>
+      <div class="note">Cross-cutting rule, Day 1: agree the CBOM asset schema (Section 06) before anyone writes feature code. Everyone builds against mock data matching it until Day 4 integration.</div>
+    </section>
+
+    <!-- 11 TIMELINE -->
+    <section class="block" id="timeline">
+      <div class="block-head"><span class="block-num">11</span><h2>6-Day Build Timeline</h2></div>
+      <div class="mermaid">
+gantt
+    title ECDAT Build Schedule
+    dateFormat  X
+    axisFormat Day %d
+    section Foundation
+    Schema lock + mock data      :done, d1, 0, 1
+    section Tier 1
+    Scanners + Correlation lead  :active, d23, 1, 3
+    Risk engine + Blast Radius   :d23b, 1, 3
+    Frontend 7 screens           :d24, 1, 4
+    Full integration test        :milestone, d4, 4, 1
+    section Tier 2
+    Ensemble reconciliation UI   :d5a, 4, 1
+    Signed CBOM                  :d5b, 4, 1
+    India compliance pack        :d5c, 4, 1
+    Mosca slider + reachability  :d5d, 5, 1
+    section Demo Prep
+    Pre-run drift scans + cache  :d6a, 5, 1
+    Rehearse full narrative x2   :d6b, 5, 1
+      </div>
+    </section>
+
+    <!-- 12 TIERS -->
+    <section class="block" id="tiers">
+      <div class="block-head"><span class="block-num">12</span><h2>Tier 1 vs Tier 2 — Descope Discipline</h2></div>
+      <table>
+        <caption>If time runs short, cut Tier 2 in reverse order below — never touch Tier 1</caption>
+        <thead><tr><th>Feature</th><th>Tier</th><th>Cost</th><th>Cut order if behind</th></tr></thead>
+        <tbody>
+          <tr><td>5 scanners + Correlation Engine</td><td>1</td><td>—</td><td><span class="badge crit">Never cut</span></td></tr>
+          <tr><td>Mosca risk engine + Blast Radius</td><td>1</td><td>—</td><td><span class="badge crit">Never cut</span></td></tr>
+          <tr><td>PQC recommendation matrix</td><td>1</td><td>—</td><td><span class="badge crit">Never cut</span></td></tr>
+          <tr><td>Ensemble reconciliation display</td><td>2</td><td>~1 day</td><td><span class="badge good">Protect — cut last</span></td></tr>
+          <tr><td>Signed CBOM</td><td>2</td><td>~0.5 day</td><td><span class="badge good">Protect — cut last</span></td></tr>
+          <tr><td>India compliance pack</td><td>2</td><td>~0.5 day</td><td><span class="badge good">Protect — cut last</span></td></tr>
+          <tr><td>Mosca slider / reachability graph</td><td>2</td><td>~1 day</td><td><span class="badge warn">Cut #3</span></td></tr>
+          <tr><td>YARA binary scanner</td><td>2 stretch</td><td>~1 day</td><td><span class="badge warn">Cut #2</span></td></tr>
+          <tr><td>Candidate custom-crypto heuristic</td><td>2 stretch</td><td>~0.5 day</td><td><span class="badge warn">Cut #1 — first to go</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 13 STANDARDS -->
+    <section class="block" id="standards">
+      <div class="block-head"><span class="block-num">13</span><h2>Standards Cheat-Sheet</h2></div>
+      <p class="block-intro">Get these exact names right in front of a technical panel — a wrong term costs credibility disproportionately.</p>
+      <table>
+        <thead><tr><th>Standard</th><th>Status</th><th>Use in pitch</th></tr></thead>
+        <tbody>
+          <tr><td>ML-KEM (FIPS 203)</td><td>Finalized Aug 2024</td><td>Primary PQC key exchange recommendation</td></tr>
+          <tr><td>ML-DSA (FIPS 204)</td><td>Finalized Aug 2024</td><td>Primary PQC signature recommendation</td></tr>
+          <tr><td>SLH-DSA (FIPS 205)</td><td>Finalized Aug 2024</td><td>Conservative hash-based signature (large sigs, slow)</td></tr>
+          <tr><td>HQC</td><td>Backup KEM, standard ~2027</td><td>Mention as the code-based backup to ML-KEM</td></tr>
+          <tr><td>CycloneDX 1.7 / ECMA-424</td><td>Oct 2025 / Dec 2025</td><td>CBOM output format, Algorithm Family + Crypto Registry</td></tr>
+          <tr><td>CNSA 2.0</td><td>Jan 2027 acquisition mandate</td><td>US national-security baseline for comparison</td></tr>
+          <tr><td>DST/NQM Roadmap</td><td>India, 2026, advisory</td><td>CII: foundations 2027, migration 2028, full PQC 2029</td></tr>
+          <tr><td>RBI Q-SAFE</td><td>Constituted May 2026</td><td>Explicitly mandates CBOM-based sector audits — cite this</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 14 DEMO -->
+    <section class="block" id="demo">
+      <div class="block-head"><span class="block-num">14</span><h2>Demo Script (3 minutes)</h2></div>
+      <ol class="clean" style="padding-left:1.4em;">
+        <li><strong>Open with the thesis (20s):</strong> "CBOM generation is commoditized — the hard problem is correlation, trust, and prioritization. That's ECDAT."</li>
+        <li><strong>Live scan (40s):</strong> point at a pre-vetted repo, show the 5 scanners firing, land on the reconciled inventory with per-asset <code>detected-by-N</code> confidence.</li>
+        <li><strong>Risk story (40s):</strong> drag the Mosca Q-Day slider from 2035 to 2029 — watch assets flip red. Explain harvest-now-decrypt-later in one sentence.</li>
+        <li><strong>Trust + sovereignty (40s):</strong> click "Sign CBOM," then tamper one byte and show verification fail. Switch policy pack to India CII — show a real 2027 deadline attached to a real asset.</li>
+        <li><strong>Close (20s):</strong> reachability graph — one root cert lighting up everything it protects. "Fix this one thing, protect all of that."</li>
+      </ol>
+      <div class="note">Rehearse against the clock at least twice on Day 6 — Time Discipline is a penalty criterion, not a bonus one.</div>
+    </section>
+
+    <!-- 15 RISK -->
+    <section class="block" id="risk">
+      <div class="block-head"><span class="block-num">15</span><h2>Risk &amp; Fallback Plan</h2></div>
+      <ul class="clean">
+        <li><strong>Live scan fails on stage:</strong> fall back to pre-cached scan results — never demo an uncached scan cold.</li>
+        <li><strong>Drift Detection:</strong> both scans pre-run offline; demo loads a static before/after screen, never two live scans back to back.</li>
+        <li><strong>Signing library issues:</strong> downgrade to a SHA-256 hash + detached signature — still proves tamper-evidence.</li>
+        <li><strong>"Why not just use CBOMkit?" question:</strong> answer directly — CBOMkit generates a CBOM; ECDAT correlates multiple generators, signs the output, and maps it to India's own compliance timeline.</li>
+        <li><strong>"How deep does reachability go?" question:</strong> be honest — it's a two-field combination (internet-facing × sensitive-data), not network tracing. Frame static analysis as the correct scope for this PS, with runtime discovery as a natural Phase 2.</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#10151C',
+      primaryColor: '#141B24',
+      primaryTextColor: '#E7EDF3',
+      primaryBorderColor: '#5FE3D0',
+      lineColor: '#93A3B5',
+      secondaryColor: '#141B24',
+      tertiaryColor: '#0A0D12',
+      fontFamily: 'Inter, sans-serif'
+    },
+    gantt: { fontSize: 12, barHeight: 20, topPadding: 30 }
+  });
+</script>
+</body>
+</html>
